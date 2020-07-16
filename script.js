@@ -13,7 +13,7 @@ const brickColumnCount = 5;
 const ball = {
     x: canvas.width / 2,
     y: canvas.height / 2,
-    size: 19,
+    size: 10,
     speed: 4,
     dx: 4, 
     dy: -4
@@ -127,18 +127,44 @@ function moveBall() {
     bricks.forEach(column => {
         column.forEach(brick => {
             if(brick.visible){
-                if(ball.x - ball.size > brick.x && //left brick side check
-                    ball.x - ball.size < brick.x +brick.w && //right brick side check)
-                    ball.y - ball.size > brick.y && //top brick side check
-                    ball.y - ball.size < brick.h +brick.y  //bottom brick side check
-                    ){
+                if(
+          ball.x - ball.size > brick.x && // left brick side check
+          ball.x + ball.size < brick.x + brick.w && // right brick side check
+          ball.y + ball.size > brick.y && // top brick side check
+          ball.y - ball.size < brick.y + brick.h // bottom brick side check
+         ){
                         ball.dy *= -1;
                         brick.visible = false;
+
+                        increaseScore();
                     }
             }
-        })
-    })
+        });
+    });
+    
+//Hit bottom wall - Lose
+if(ball.y + ball.size > canvas.height){
+    showAllBricks();
+    score =0;
 }
+
+}
+
+// Increase score
+function increaseScore() {
+    score++;
+  
+    if (score % (brickRowCount * brickRowCount) === 0) {
+      showAllBricks();
+    }
+  }
+
+// Make all bricks appear
+function showAllBricks() {
+    bricks.forEach(column => {
+      column.forEach(brick => (brick.visible = true));
+    });
+  }
 
 //Draw everything
 function draw(){
